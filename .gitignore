@@ -1,0 +1,7 @@
+.idea/
+__pycache__
+17flowers/
+flowers/
+mnist_test.csv
+__main__.py
+test.py
