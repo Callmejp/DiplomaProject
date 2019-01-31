@@ -5,3 +5,5 @@ flowers/
 mnist_test.csv
 __main__.py
 tf_saver.py
+Autumn/center/
+Autumn/tmp*/
