@@ -1,7 +1,7 @@
-import tensorflow as tf
-import numpy as np
 import Image
-from transform import number_of_0
+import numpy as np
+import tensorflow as tf
+from .transform import number_of_0
 
 
 def convert_to_one_hot(y, C):

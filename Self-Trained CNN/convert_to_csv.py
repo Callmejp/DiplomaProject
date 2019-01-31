@@ -1,8 +1,8 @@
-import numpy as np
-import Image
 import csv
-from transform import number_of_0
 
+import Image
+import numpy as np
+from .transform import number_of_0
 
 with open('flower.csv', 'w', newline='') as f:
     writer = csv.writer(f, delimiter=',')

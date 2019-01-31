@@ -13,5 +13,14 @@ To simplify this problem, l only use six kinds of flowers. Another reason for th
 that my network is from <https://www.coursera.org/learn/convolutional-neural-networks/home/welcome>.
 So thanks Andrew here.
 
-You also can download the entire dataset there.
+You also can download the entire `dataset`(17flowers.tgz) there.
 
+## Second Step
+Only in safety critical domains can DeepPoly show its importance. So 
+l want to use it to test autonomous driving network. And l 
+use the models that are mentioned in <https://arxiv.org/abs/1802.02295>
+and also open in [github](https://github.com/udacity/self-driving-car).
+But l am encountering great difficulty because these networks are not used
+to classify images, but used to predict driving-angles which means they will only
+generate a real value. So l will change the code in DeepPoly so that it 
+can handle these networks.`Wish me luck`.
