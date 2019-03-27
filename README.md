@@ -24,3 +24,8 @@ But l am encountering great difficulty because these networks are not used
 to classify images, but used to predict driving-angles which means they will only
 generate a real value. So l will change the code in DeepPoly so that it 
 can handle these networks.`Wish me luck`.
+
+## Third Step
+l think that l make DeepPoly deal with Autumn successfully. You can find the improved code in `DeepPoly`.
+But the results are terrible. And l also try the [LeNet-5](https://github.com/ganyc717/LeNet), the results are also ordinary. 
+Because of its incompleteness l can't draw an accurate conclusion.

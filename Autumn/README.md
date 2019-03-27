@@ -16,6 +16,6 @@ into a csv file.
 Each line of it is a picture's one-dimensional representation.
 And it has 16 lines, i.e., it only has 16 case.
 
-### 'model'
+### `model`
 It includes the trained result. And it will be used by DeepPoly to import the 
 graph.
