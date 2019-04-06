@@ -1,5 +1,4 @@
 import sys
-
 sys.path.insert(0, '../ELINA/python_interface/')
 import os
 from eran import ERAN
@@ -13,17 +12,17 @@ import argparse
 def normalize(image, dimension, num_pixels, means, stds):
     if dimension == 1:
         for i in range(len(image)):
-            image[i] = (image[i] - means[0]) / stds[0]
+            image[i] = (image[i] - means[0])/stds[0]
     else:
         count = 0
         tmp = np.zeros(num_pixels)
         length = int(num_pixels / dimension)
         for i in range(length):
-            tmp[count] = (image[count] - means[0]) / stds[0]
+            tmp[count] = (image[count] - means[0])/stds[0]
             count = count + 1
-            tmp[count] = (image[count] - means[1]) / stds[1]
+            tmp[count] = (image[count] - means[1])/stds[1]
             count = count + 1
-            tmp[count] = (image[count] - means[2]) / stds[2]
+            tmp[count] = (image[count] - means[2])/stds[2]
             count = count + 1
 
         if is_conv:
@@ -33,11 +32,11 @@ def normalize(image, dimension, num_pixels, means, stds):
             count = 0
             for i in range(length):
                 image[i] = tmp[count]
-                count = count + 1
-                image[i + length] = tmp[count]
-                count = count + 1
-                image[i + length * 2] = tmp[count]
-                count = count + 1
+                count = count+1
+                image[i+length] = tmp[count]
+                count = count+1
+                image[i+length*2] = tmp[count]
+                count = count+1
 
 
 parser = argparse.ArgumentParser(description="test the network by Deeppoly")
@@ -67,6 +66,7 @@ domain = args.domain
 normalize_value = args.normalize
 dimension = args.dimension
 
+print(netname)
 filename, file_extension = os.path.splitext(netname)
 if file_extension == ".pyt":
     is_trained_with_pytorch = True
@@ -91,16 +91,16 @@ for test in tests:
     num_pixels = len(test) - 1
     break
 
+
 if is_saved_tf_model:
-    netfolder = os.path.dirname(netname)
+    netfolder = os.path.dirname(netname) 
 
     tf.logging.set_verbosity(tf.logging.ERROR)
-    ############################################
+
     sess = tf.Session()
     saver = tf.train.import_meta_graph(netname)
-    saver.restore(sess, '../../networks/autumn/autumn-cnn-weights.ckpt')
-    eran = ERAN(sess.graph.get_tensor_by_name('y:0'), sess)
-    ############################################
+    saver.restore(sess, tf.train.latest_checkpoint(netfolder+'/'))
+    eran = ERAN(sess.graph.get_tensor_by_name('logits:0'), sess)
 else:
     print(num_pixels)
     model, is_conv, means, stds = read_net(netname, num_pixels, is_trained_with_pytorch)
@@ -108,45 +108,54 @@ else:
 
 csvfile = open(dataname, 'r')
 tests = csv.reader(csvfile, delimiter=',')
+
+total_time = 0.0
+
 for test in tests:
-    """
-    if dataset == 'mnist':
-        image = np.float64(test[1:len(test)])/np.float64(255)
-    else:
-        if is_trained_with_pytorch:
-            image = (np.float64(test[1:len(test)])/np.float64(255))
-        else:
-            image = (np.float64(test[1:len(test)])/np.float64(255)) - 0.5
-    """
-    image = (np.float64(test[1:len(test)]) / np.float64(255)) - normalize_value
-    # print(image.shape)
+    start = time.time()
+
+    image = (np.float64(test[1:len(test)]) / np.float64(10)) - normalize_value 
     specLB = np.copy(image)
     specUB = np.copy(image)
+    
     if is_trained_with_pytorch:
         normalize(specLB, dimension, num_pixels, means, stds)
         normalize(specUB, dimension, num_pixels, means, stds)
+    
+    label = eran.analyze_box(specLB, specUB, domain, int(test[0]))
+    ''' 
+    X_test = image.reshape((1, 784))
+    Y_test = np.array([0])
+    Y_test = convert_to_one_hot(Y_test, 10).T 
+    graph = tf.get_default_graph()
+    X = graph.get_tensor_by_name("Placeholder:0")
+    Y = graph.get_tensor_by_name("Placeholder_1:0")
+    Z3 = graph.get_tensor_by_name("Lenet/fc9_1/Relu:0")
+    feed_dict = {X: X_test, Y: Y_test}
+    #print(sess.run(Z3, feed_dict))
+    '''
 
-    label = 0
+    
     if label == int(test[0]):
-        specLB = np.clip(image - epsilon, 0 - normalize_value, 1 - normalize_value)
-        specUB = np.clip(image + epsilon, 0 - normalize_value, 1 - normalize_value)
-
+        specLB = np.clip(image - epsilon, 0-normalize_value, 1-normalize_value)
+        specUB = np.clip(image + epsilon, 0-normalize_value, 1-normalize_value)
         if is_trained_with_pytorch:
             normalize(specLB, dimension, num_pixels, means, stds)
             normalize(specUB, dimension, num_pixels, means, stds)
-        start = time.time()
-        perturbed_label = eran.analyze_box(specLB, specUB, domain)
+        
+        perturbed_label = eran.analyze_box(specLB, specUB, domain, label)
         if perturbed_label == label:
             print("img", total_images, "Verified", label)
             verified_images += 1
         else:
             print("img", total_images, "Failed")
-        correctly_classified_images += 1
+        correctly_classified_images +=1    
         end = time.time()
-        print(end - start)
+        total_time += (end - start)
     else:
         print("img", total_images, "not considered, correct_label", int(test[0]), "classified label ", label)
     total_images += 1
-
+print("total_time: ", total_time)
+print("avg_time: ", total_time/correctly_classified_images)
 print('analysis precision ', verified_images, '/ ', correctly_classified_images)
 

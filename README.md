@@ -20,7 +20,7 @@ You also can download the entire `dataset`(17flowers.tgz) there.
 l think the results so far have met expectations. And l also adjusted the code logic in `analyze.py` to improve performance.
 You can find the final version of `__main__.py` and `analyzer.py` in the root directory of `DeepPoly`. 
 ## Second Step
-###Ideas:
+### Ideas:
 Only in safety critical domains can DeepPoly show its importance. So 
 l want to use it to test autonomous driving network. And l 
 use the models that are mentioned in <https://arxiv.org/abs/1802.02295>
@@ -29,7 +29,7 @@ But l am encountering great difficulty because these networks are not used
 to classify images, but used to predict driving-angles which means they will only
 generate a real value. So l will change the code in DeepPoly so that it 
 can handle these networks.`Wish me luck`.
-###Results:
+### Results:
 l think that l make DeepPoly deal with Autumn successfully. You can find the improved code in `DeepPoly`.
 But the results are terrible. And l also try the [LeNet-5](https://github.com/ganyc717/LeNet), the results are also ordinary. 
 Because of its incompleteness l can't draw an accurate conclusion.
