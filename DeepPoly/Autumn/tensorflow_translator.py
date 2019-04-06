@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.python.keras.engine.sequential import Sequential
 from tensorflow.python.framework import graph_util
-
+######################################
 """
 Because in line 195
 Autumn(model)'s op.outputs.shape isn't explict
@@ -32,7 +32,7 @@ autumn_shape_dict = {
     "import/add_5": [1, 1164],
     "import/Relu_5": [1, 1164]
 }
-
+######################################
 
 def tensorshape_to_intlist(tensorshape):
     """
