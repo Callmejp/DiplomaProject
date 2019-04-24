@@ -8,3 +8,4 @@ tf_saver.py
 Autumn/center/
 Autumn/tmp*/
 Autumn/final_example.csv/
+FlowerNet/*flower*
