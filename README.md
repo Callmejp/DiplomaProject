@@ -45,3 +45,5 @@ You can find the training code and sth else in `ChestNet` directory.
 ## Finally
 Soon l will upload my paper here and you can check my results. But l think it's meaningless because you konw, the problem about testing
 the robustness of DNNs are NPC problems. And related techniques are just getting started. 
+
+By the way, my paper is written by Chinese.

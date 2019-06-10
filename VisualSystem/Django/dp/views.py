@@ -124,7 +124,10 @@ import time
 
 
 def test(request):
-    result = {"res": "hh"}
+    result = {"wait": 0}
+    if os.path.exists('/home/ubuntu/mystite/upload/1.txt'):
+        result['wait'] = 1
+        return JsonResponse(result, safe=False)
     network_one = request.FILES.get('file')
     network_two = request.FILES.get('file1')
    

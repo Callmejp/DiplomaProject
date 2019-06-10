@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="panel panel-success">
-          <div class="panel-heading">Using .tf/.pyt</div>
+          <div class="panel-heading">Using .tf/.pyt format</div>
           <div class="panel-body">
             <form>
               <div class="form-group">
@@ -47,7 +47,7 @@
               results by improved DeepPoly in advance and upload them here.
             </div>
           </div>
-          <div class="panel-heading">Using .meta</div>
+          <div class="panel-heading">Using .meta format</div>
           <div class="panel-body">
             <form>
               <div class="form-group">
@@ -294,6 +294,10 @@ export default {
     },
     start_dp: function (event) {
       event.preventDefault()
+      if (this.file === '' || this.file1 === '') {
+        alert('Please upload two networks for analysis!')
+        return
+      }
       let formData = new FormData()
       formData.append('file', this.file)
       formData.append('file1', this.file1)
@@ -305,12 +309,20 @@ export default {
       Vue.axios.post('http://118.25.52.27:8000/deeppoly/query/', formData, config).then((response) => {
         if (response.status === 200) {
           console.log(response)
+          if (response.data.wait === 1) {
+            alert('Server is busy, please try later!')
+            return
+          }
           this.timer = setInterval(this.changeAxis, 5000)
         }
       })
     },
     start_draw: function (event) {
       event.preventDefault()
+      if (this.result === '' || this.result1 === '') {
+        alert('Please upload two results for analysis!')
+        return
+      }
       let formData = new FormData()
       formData.append('rst', this.result)
       formData.append('rst1', this.result1)
